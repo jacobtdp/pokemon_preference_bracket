@@ -30,7 +30,7 @@ app.post('/api/world', (req, res) => {
 //     console.log('There was an ERROR: ', error);
 //   });
 
-app.get('https://pokeapi.co/api/v2/pokemon-species/1/', (req, res) => {
+app.get('https://pokeapi.co/api/v2/pokemon/1/', (req, res) => {
   console.log("In server");
   console.log(res.body);
   res.send( `Pokemon response: ${res.body}` );

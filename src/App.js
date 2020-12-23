@@ -4,16 +4,32 @@ import logo from './logo.svg';
 
 import './App.css';
 
+function createPokemonObj(res){
+  let pokemonObj = {
+    name: '',
+    type1: '',
+    type2: ''
+  }
+  pokemonObj.name = res.name;
+  pokemonObj.type1 = res.types[0].type.name;
+  if(res.types[1]){
+    pokemonObj.type2 = res.types[1].type.name;
+  }
+  console.log(pokemonObj);
+
+  return pokemonObj;
+}
+
 class App extends Component {
   state = {
-    response: '',
-    post: '',
-    responseToPost: '',
+    response: {},
+    responesArray: [],
   };
   
   componentDidMount() {
     this.callPokemon()
-      .then(res => this.setState({ response: res }))
+      // .then(res => this.setState({ response: res }))
+      .then(res => createPokemonObj(res))
       .catch(err => console.log(err));
   }
   
@@ -25,8 +41,16 @@ class App extends Component {
     return body;
   };
 
+  // assemblePokemonObj = (res) => {
+  //   let pokemonObj = {
+  //     name: res.name,
+  //     type: res.types[0].type
+  //   };
+  //   return pokemonObj;
+  // }
+
   callPokemon = async () => {
-    const response = await fetch('https://pokeapi.co/api/v2/pokemon-species/1/');
+    const response = await fetch('https://pokeapi.co/api/v2/pokemon/1/');
     const body = await response.json();
     console.log(body.name);
     if (response.status !== 200) throw Error(body.message);
