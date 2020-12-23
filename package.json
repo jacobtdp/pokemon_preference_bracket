@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.6.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "pokedex-promise-v2": "^3.3.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",

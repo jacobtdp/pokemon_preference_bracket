@@ -12,8 +12,8 @@ class App extends Component {
   };
   
   componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
+    this.callPokemon()
+      .then(res => this.setState({ response: res }))
       .catch(err => console.log(err));
   }
   
@@ -24,6 +24,15 @@ class App extends Component {
     
     return body;
   };
+
+  callPokemon = async () => {
+    const response = await fetch('https://pokeapi.co/api/v2/pokemon-species/1/');
+    const body = await response.json();
+    console.log(body.name);
+    if (response.status !== 200) throw Error(body.message);
+    
+    return body;
+  }
   
   handleSubmit = async e => {
     e.preventDefault();
@@ -45,7 +54,7 @@ render() {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
-            Edit <code>src/App.js</code> and save to reload.
+            Edit <code>client/src/App.js</code> and save to reload.
           </p>
           <a
             className="App-link"
@@ -56,7 +65,9 @@ render() {
             Learn React
           </a>
         </header>
-        <p>{this.state.response}</p>
+        <p>Pokemon 1: </p>
+        {console.log(this.state)}
+        <p>{this.state.response.name}</p>
         <form onSubmit={this.handleSubmit}>
           <p>
             <strong>Post to Server:</strong>
