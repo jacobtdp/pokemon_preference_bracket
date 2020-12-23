@@ -1,58 +1,47 @@
 import React, { Component } from 'react';
-
 import logo from './logo.svg';
-
 import './App.css';
 
 function createPokemonObj(res){
   let pokemonObj = {
     name: '',
-    type1: '',
-    type2: ''
+    type1: null,
+    type2: null
   }
   pokemonObj.name = res.name;
   pokemonObj.type1 = res.types[0].type.name;
   if(res.types[1]){
     pokemonObj.type2 = res.types[1].type.name;
   }
-  console.log(pokemonObj);
 
   return pokemonObj;
 }
 
 class App extends Component {
   state = {
-    response: {},
-    responesArray: [],
+    responsesArray: [],
   };
   
   componentDidMount() {
-    this.callPokemon()
-      // .then(res => this.setState({ response: res }))
-      .then(res => createPokemonObj(res))
-      .catch(err => console.log(err));
+
+    if(localStorage.getItem('Pokedex') == null){
+      this.setState({ responsesArray: [] });
+
+      for(let i = 1; i < 899; i++){
+        console.log(i);
+        this.callPokemon(i)
+          .then(res => this.setState({ responsesArray: [...this.state.responsesArray, createPokemonObj(res)] }))
+          .catch(err => console.log(err));
+      }
+    } else {
+      this.setState({ responsesArray: JSON.parse(localStorage.getItem('Pokedex')) });
+    }
+
   }
-  
-  callApi = async () => {
-    const response = await fetch('/api/hello');
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    
-    return body;
-  };
 
-  // assemblePokemonObj = (res) => {
-  //   let pokemonObj = {
-  //     name: res.name,
-  //     type: res.types[0].type
-  //   };
-  //   return pokemonObj;
-  // }
-
-  callPokemon = async () => {
-    const response = await fetch('https://pokeapi.co/api/v2/pokemon/1/');
+  callPokemon = async (id) => {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
     const body = await response.json();
-    console.log(body.name);
     if (response.status !== 200) throw Error(body.message);
     
     return body;
@@ -73,6 +62,12 @@ class App extends Component {
   };
   
 render() {
+
+    if(this.state.responsesArray.length === 898 && !localStorage.getItem('Pokedex')){
+      localStorage.setItem('Pokedex', JSON.stringify(this.state.responsesArray));
+    }
+
+
     return (
       <div className="App">
         <header className="App-header">
@@ -90,8 +85,6 @@ render() {
           </a>
         </header>
         <p>Pokemon 1: </p>
-        {console.log(this.state)}
-        <p>{this.state.response.name}</p>
         <form onSubmit={this.handleSubmit}>
           <p>
             <strong>Post to Server:</strong>
