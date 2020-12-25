@@ -1,0 +1,27 @@
+  handleSubmit = async e => {
+    e.preventDefault();
+    const response = await fetch('/api/world', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ post: this.state.post }),
+    });
+    const body = await response.text();
+    
+    this.setState({ responseToPost: body });
+  };
+
+
+
+  function eliminatePokemon(pokemon){
+  console.log('pokemon to delete ID: ', pokemon);
+}
+
+        <p>Pokemon: </p>
+        <button onClick={e => eliminatePokemon(pokemon[1])}>
+          <p>{ pokemon1 ? pokemon1.name : 'no Pokemon encountered :(' }</p>
+        </button>
+        <button onClick={e => eliminatePokemon(pokemon[0])}>
+          <p>{ pokemon2 ? pokemon2.name : 'no Pokemon encountered :(' }</p>
+        </button>
