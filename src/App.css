@@ -24,6 +24,24 @@
   color: white;
 }
 
+.pokemon {
+  width: 40vw;
+}
+
+.sprite {
+  width: 40vw;
+}
+
+.types {
+  display:          inline;
+  font-size:        14;
+  margin:           1em;
+  background-color: white;
+  border-radius:    5px;
+  box-shadow:       2px 2px;
+  padding:          0.5em
+}
+
 .App-link {
   color: #61dafb;
 }
