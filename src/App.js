@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -10,12 +9,14 @@ function createPokemonObj(res){ // turn API response into usable object
     type1:      null,
     type2:      null,
     spriteURL:  null,
-    artwork:    null
+    artwork:    null,
+    id:         null
   }
   pokemonObj.name      = res.name.charAt(0).toUpperCase() + res.name.slice(1);
   pokemonObj.type1     = res.types[0].type.name.charAt(0).toUpperCase() + res.types[0].type.name.slice(1);
   pokemonObj.spriteURL = res.sprites.front_default;
   pokemonObj.artwork   = res.sprites.other["official-artwork"].front_default;
+  pokemonObj.id        = res.id;
   if(res.types[1]){
     pokemonObj.type2   = res.types[0].type.name.charAt(0).toUpperCase() + res.types[0].type.name.slice(1);
   }
@@ -32,6 +33,10 @@ function selectPokemonToDisplay(numPokemonRemaining){
   
   return [pokemon1, pokemon2];
 }
+
+function selectPokedex(allPokemonArray){
+  return allPokemonArray;
+}
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ------------------------------------------------------------------------------------
 
@@ -43,12 +48,15 @@ function selectPokemonToDisplay(numPokemonRemaining){
     }
   }
 
+
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ------------------------------------------------------------------------------------
 class App extends Component {
   state = {
-    responsesArray: [],
-    pokemonEliminated: false
+    responsesArray:    [],
+    pokemonEliminated: false,
+    generations:       [1, 2, 3]
   };
   
   componentDidMount() {
@@ -93,7 +101,8 @@ render() {
 
     // find id for two random pokemon to select from responses array
     let pokemon = selectPokemonToDisplay(numPokemon);
-    let pokemonArray = this.state.responsesArray;
+    let allPokemonArray = this.state.responsesArray;
+    let pokemonArray = selectPokedex(allPokemonArray, this.state.generations);
     let pokemon1;
     let pokemon2;
 
@@ -111,12 +120,64 @@ render() {
       console.log('num pokemon: ', numPokemon);
     }
 
+    function updateGens(val){
+      let oldArr = JSON.parse(localStorage.getItem('checkArray'));
+      let index;
+      val = parseInt(val);
+
+      if(!oldArr.find(e => e === val)){
+        oldArr.push(val);
+        console.log(oldArr);
+      } else if(oldArr.find(e => e === val)) {
+        index = oldArr.indexOf(val);
+
+        let newArr = oldArr;
+        newArr.splice(index, 1);
+        console.log('new arr: ', newArr);
+      }
+
+      renderCheckbox(oldArr);
+    }
+
     if(numPokemon === 50){ // saving completion lists
       localStorage.setItem('Top-50', JSON.stringify(pokemonArray));
     } else if(numPokemon === 25){
       localStorage.setItem('Top-25', JSON.stringify(pokemonArray));
     } else if(numPokemon === 6){
       localStorage.setItem('Your-team', JSON.stringify(pokemonArray));
+    }
+
+    function renderCheckbox(updatedArray=false){
+      let box1Check = true;
+      let box2Check = true;
+      let box3Check = true;
+      let checkArray;
+
+
+      // create populate checkarray from either default or localStorage
+      if(localStorage.getItem('checkArray')){
+        checkArray = JSON.parse(localStorage.getItem('checkArray'));
+      } else {
+        checkArray = [1, 2, 3];
+        localStorage.setItem('checkArray', JSON.stringify(checkArray));
+      }
+      if(updatedArray){ // if a checkbox is clicked, send new gens array to storage
+        checkArray = updatedArray;
+        localStorage.setItem('checkArray', JSON.stringify(checkArray));
+      }
+
+      // if gen is not in array, box defaults unchecked
+      for(let i = 0; i < 3; i++){
+        if(!checkArray.find(element => element === i + 1)){
+          eval( 'box' + (i + 1) + 'Check = false;' );
+        }
+      }
+      // render the checkboxes div
+      return [<div onChange={e => updateGens(e.target.value)}>
+        <input type="checkbox" value="1" name="gen" defaultChecked={box1Check} /> Gen 1
+        <input type="checkbox" value="2" name="gen" defaultChecked={box2Check} /> Gen 2
+        <input type="checkbox" value="3" name="gen" defaultChecked={box3Check} /> Gen 3
+      </div>]
     }
 
 
@@ -132,6 +193,14 @@ render() {
           {/* <button></button> */}
         {/* </header> */}
 
+      {/* <div onChange={e => updateGens(e.target.value)}>
+        <input type="checkbox" value="1" name="gen" defaultChecked={true} /> Gen 1
+        <input type="checkbox" value="2" name="gen" defaultChecked={true} /> Gen 2
+        <input type="checkbox" value="3" name="gen" defaultChecked={true} /> Gen 3
+      </div> */}
+
+      { renderCheckbox() }
+
 {/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
 {/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
 
@@ -144,7 +213,7 @@ render() {
               <p className="types">{ pokemon1 ? pokemon1.type1 : 'type not found' }</p>
               {/* <p className="types">{ pokemon1 ? pokemon1.type2 : null }</p> */}
               { pokemon2 ? renderType2(pokemon2.type2) : null }
-              <img className="sprite" src={ pokemon1 ? pokemon1.artwork : null } />
+              <img className="sprite" src={ pokemon1 ? pokemon1.artwork : null } alt="pokemon" />
             </div>
           </button>
           <button className="pokemon" onClick={e => eliminatePokemon(pokemon[0])}>
@@ -153,7 +222,7 @@ render() {
               <p className="types">{ pokemon2 ? pokemon2.type1 : 'type not found' }</p>
               {/* <p className="types">{ pokemon2 ? pokemon2.type2 : null }</p> */}
               { pokemon2 ? renderType2(pokemon2.type2) : null }
-              <img className="sprite" src={ pokemon2 ? pokemon2.artwork : null } />           
+              <img className="sprite" src={ pokemon2 ? pokemon2.artwork : null } alt="pokemon" />           
             </div>
           </button>
         </div>
