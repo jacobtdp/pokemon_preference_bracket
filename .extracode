@@ -25,3 +25,47 @@
         <button onClick={e => eliminatePokemon(pokemon[0])}>
           <p>{ pokemon2 ? pokemon2.name : 'no Pokemon encountered :(' }</p>
         </button>
+
+
+            if(numPokemon === 50){ // saving completion lists
+      localStorage.setItem('Top-50', JSON.stringify(pokemonArray));
+    } else if(numPokemon === 25){
+      localStorage.setItem('Top-25', JSON.stringify(pokemonArray));
+    } else if(numPokemon === 6){
+      localStorage.setItem('Your-team', JSON.stringify(pokemonArray));
+    }
+
+
+        function getPokedex(gens, pokemonArray){
+      let index;
+      console.log(pokemonArray);
+
+
+      if(!gens.find(e => e === 1)){
+        index = pokemonArray.findIndex(e => e.id === 1);
+        pokemonArray.splice(0, 150)
+      }
+      // if(!gens.find(e => e === 2)){
+      //   pokemonArray.splice(151, 250)
+      // }
+      // if(!gens.find(e => e === 3)){
+      //   pokemonArray.splice(251, 385)
+      // }
+      // if(!gens.find(e => e === 4)){
+      //   pokemonArray.splice(386, 492)
+      // }
+      // if(!gens.find(e => e === 5)){
+      //   pokemonArray.splice(493, 648)
+      // }
+      // if(!gens.find(e => e === 6)){
+      //   pokemonArray.splice(649, 720)
+      // }
+      // if(!gens.find(e => e === 7)){
+      //   pokemonArray.splice(721, 808)
+      // }
+      // if(!gens.find(e => e === 8)){
+      //   pokemonArray.splice(809, 897)
+      // }
+      console.log(pokemonArray);
+      return pokemonArray;
+    }

@@ -33,10 +33,6 @@ function selectPokemonToDisplay(numPokemonRemaining){
   
   return [pokemon1, pokemon2];
 }
-
-function selectPokedex(allPokemonArray){
-  return allPokemonArray;
-}
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ------------------------------------------------------------------------------------
 
@@ -47,8 +43,6 @@ function selectPokedex(allPokemonArray){
       return null;
     }
   }
-
-
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ------------------------------------------------------------------------------------
@@ -69,10 +63,14 @@ class App extends Component {
           .then(res => this.setState({ responsesArray: [...this.state.responsesArray, createPokemonObj(res)] }))
           .catch(err => console.log(err));
       }
+      // sort pokemon by ID
+      let pokedex = this.state.responsesArray;
+      pokedex.sort((a, b) => (a.id > b.id) ? 1 : -1);
+      this.setState({ responsesArray: pokedex });
+
     } else { // load Pokemon to state from local storage
       this.setState({ responsesArray: JSON.parse(localStorage.getItem('Pokedex')) });
     }
-
   }
 
   callPokemon = async (id) => {
@@ -82,9 +80,52 @@ class App extends Component {
     
     return body;
   }
+
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ------------------------------------------------------------------------------------
 render() {
+
+    let gens = JSON.parse(localStorage.getItem('checkArray'));
+    ////////////////////////////////////////////////////////////////////
+
+    function prepareDex(){
+      let gens    = JSON.parse(localStorage.getItem('checkArray'));
+      let pokedex = JSON.parse(localStorage.getItem('Pokedex'));
+
+      console.log(gens);
+
+      if(!gens.find(e => e === 8)){
+        pokedex.splice(809, 897)
+      }
+      if(!gens.find(e => e === 7)){
+        pokedex.splice(721, 808)
+      }
+      if(!gens.find(e => e === 6)){
+        pokedex.splice(649, 720)
+      }
+      if(!gens.find(e => e === 5)){
+        pokedex.splice(493, 648)
+      }
+      if(!gens.find(e => e === 4)){
+        pokedex.splice(386, 492)
+      }
+      if(!gens.find(e => e === 3)){
+        pokedex.splice(251, 385)
+      }
+      if(!gens.find(e => e === 2)){
+        pokedex.splice(151, 250)
+      }
+      if(!gens.find(e => e === 1)){
+        pokedex.splice(0, 150)
+      }
+
+      console.log(pokedex);
+    }
+
+    prepareDex();
+
+    //////////////////////////////////////////////////////////////////
 
     // update the number of pokemon from localStorage upon page refresh
     let numPokemon;
@@ -101,8 +142,7 @@ render() {
 
     // find id for two random pokemon to select from responses array
     let pokemon = selectPokemonToDisplay(numPokemon);
-    let allPokemonArray = this.state.responsesArray;
-    let pokemonArray = selectPokedex(allPokemonArray, this.state.generations);
+    let pokemonArray = this.state.responsesArray;
     let pokemon1;
     let pokemon2;
 
@@ -111,7 +151,7 @@ render() {
       pokemon2 = pokemonArray[pokemon[1]];
     }
 
-    function eliminatePokemon(pokemon){
+    function eliminatePokemon(pokemon){ // remove pokemon from array, reduce num pokemon by 1
       pokemonArray.splice(pokemon, 1);
       localStorage.setItem('Pokedex', JSON.stringify(pokemonArray));
       numPokemon--;
@@ -121,30 +161,19 @@ render() {
     }
 
     function updateGens(val){
-      let oldArr = JSON.parse(localStorage.getItem('checkArray'));
-      let index;
+      // populate array with localStorage checkbox info upon checkbox click
+      let checksArr = JSON.parse(localStorage.getItem('checkArray'));
       val = parseInt(val);
 
-      if(!oldArr.find(e => e === val)){
-        oldArr.push(val);
-        console.log(oldArr);
-      } else if(oldArr.find(e => e === val)) {
-        index = oldArr.indexOf(val);
-
-        let newArr = oldArr;
+      if(!checksArr.find(e => e === val)){ // if gen not in array, add it
+        checksArr.push(val);
+      } else if(checksArr.find(e => e === val)) { // if gen is in array, remove it
+        let index = checksArr.indexOf(val);
+        let newArr = checksArr;
         newArr.splice(index, 1);
-        console.log('new arr: ', newArr);
       }
 
-      renderCheckbox(oldArr);
-    }
-
-    if(numPokemon === 50){ // saving completion lists
-      localStorage.setItem('Top-50', JSON.stringify(pokemonArray));
-    } else if(numPokemon === 25){
-      localStorage.setItem('Top-25', JSON.stringify(pokemonArray));
-    } else if(numPokemon === 6){
-      localStorage.setItem('Your-team', JSON.stringify(pokemonArray));
+      renderCheckbox(checksArr);
     }
 
     function renderCheckbox(updatedArray=false){
@@ -153,7 +182,6 @@ render() {
       let box3Check = true;
       let checkArray;
 
-
       // create populate checkarray from either default or localStorage
       if(localStorage.getItem('checkArray')){
         checkArray = JSON.parse(localStorage.getItem('checkArray'));
@@ -161,7 +189,9 @@ render() {
         checkArray = [1, 2, 3];
         localStorage.setItem('checkArray', JSON.stringify(checkArray));
       }
-      if(updatedArray){ // if a checkbox is clicked, send new gens array to storage
+      
+      // if a checkbox is clicked, send new gens array to storage
+      if(updatedArray){ 
         checkArray = updatedArray;
         localStorage.setItem('checkArray', JSON.stringify(checkArray));
       }
@@ -172,6 +202,7 @@ render() {
           eval( 'box' + (i + 1) + 'Check = false;' );
         }
       }
+
       // render the checkboxes div
       return [<div onChange={e => updateGens(e.target.value)}>
         <input type="checkbox" value="1" name="gen" defaultChecked={box1Check} /> Gen 1
@@ -180,29 +211,12 @@ render() {
       </div>]
     }
 
-
-
     return (
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
       <div className="App">
-        {/* <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-
-          {/* <button></button> */}
-        {/* </header> */}
-
-      {/* <div onChange={e => updateGens(e.target.value)}>
-        <input type="checkbox" value="1" name="gen" defaultChecked={true} /> Gen 1
-        <input type="checkbox" value="2" name="gen" defaultChecked={true} /> Gen 2
-        <input type="checkbox" value="3" name="gen" defaultChecked={true} /> Gen 3
-      </div> */}
-
       { renderCheckbox() }
-
-{/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-{/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
 
         <p>Pokemon: </p>
 
@@ -228,10 +242,6 @@ render() {
         </div>
 
         <button onClick={e => this.setState({ pokemonEliminated: true })}>Skip Round</button>
-
-
-
-
 
       </div>
     );
