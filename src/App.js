@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import whileLoading from './functions' ;
+import { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB } from './functions' ;
 import './App.css';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -35,7 +35,6 @@ class App extends Component {
     if(localStorage.getItem('Pokedex') == null){ // if Pokemon have not been loaded locally
       this.setState({ responsesArray: [] });
       for(let i = 1; i < 899; i++){ // load Pokemon to state from API
-        console.log(i);
         this.callPokemon(i)
           .then(res => this.setState({ responsesArray: [...this.state.responsesArray, createPokemonObj(res)] }))
           .catch(err => console.log(err));
@@ -57,21 +56,17 @@ class App extends Component {
 // ------------------------------------------------------------------------------------
 
   render(){
-    // whileLoading(this.state.responsesArray);
-    // let pokedex = organizeDexByGen(this.state.responsesArray);
-    // let gens = getGensFromCB();
+    organizeDexByGen(this.state.responsesArray);
+    let gens = getGensFromStorage(this.state.responsesArray);
     // let pokedexToDisplayFrom = aggregateDex(pokedex, gens);
     // let pokemonToDisplay = selectPokemon(pokedexToDisplayFrom);
-
-
-    console.log(this.state.responsesArray);
 
     return (
 
       <div className="App">
         <p>Pokemon: </p>
         <div>{ whileLoading(this.state.responsesArray) }</div>
-
+        <div>{ renderCB(this.state.responsesArray) }</div>
 
 
         {/*  div onClick={ e => eliminatePokemon(e) }  */}
