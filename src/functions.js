@@ -194,7 +194,19 @@ export const renderPokemon = function(pokemonToDisplay, nationalDex){
     }
 }
 
+export const resetDexes = function(){
+    localStorage.clear();
+}
 
 
 
-export default { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB, aggregateDex, selectPokemon, renderPokemon };
+
+export default { whileLoading,
+organizeDexByGen, 
+getGensFromStorage, 
+renderCB, 
+updateCB, 
+aggregateDex, 
+selectPokemon, 
+renderPokemon,
+resetDexes };

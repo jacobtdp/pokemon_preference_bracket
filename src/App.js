@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB, aggregateDex, selectPokemon, renderPokemon } from './functions' ;
+import { whileLoading, 
+organizeDexByGen, 
+getGensFromStorage, 
+renderCB, updateCB, 
+aggregateDex, 
+selectPokemon, 
+renderPokemon,
+resetDexes } from './functions' ;
 import './App.css';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,6 +83,7 @@ class App extends Component {
 
         {/*  div onClick={ e => eliminatePokemon(e) }  */}
         <button onClick={e => this.setState({ pokemonEliminated: true })}>Skip Round</button>
+        <div onClick={e => this.setState({ pokemonEliminated: true })}><button onClick={e => resetDexes()}>Reset Pokedex</button></div>
       </div>
     );
     
