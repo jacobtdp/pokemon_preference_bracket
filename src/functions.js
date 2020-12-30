@@ -46,31 +46,32 @@ export const getGensFromStorage = function(nationalDex){
 }
 
 export const renderCB = function(nationalDex){
-    if(nationalDex.length === 898){
+    if(nationalDex){
+        if(nationalDex.length === 898){
+            let gens = JSON.parse(localStorage.getItem('gens'));
+            let checked1 = gens.includes(1);
+            let checked2 = gens.includes(2);
+            let checked3 = gens.includes(3);
+            let checked4 = gens.includes(4);
+            let checked5 = gens.includes(5);
+            let checked6 = gens.includes(6);
+            let checked7 = gens.includes(7);
+            let checked8 = gens.includes(8);
 
-        let gens = JSON.parse(localStorage.getItem('gens'));
-        let checked1 = gens.includes(1);
-        let checked2 = gens.includes(2);
-        let checked3 = gens.includes(3);
-        let checked4 = gens.includes(4);
-        let checked5 = gens.includes(5);
-        let checked6 = gens.includes(6);
-        let checked7 = gens.includes(7);
-        let checked8 = gens.includes(8);
 
-
-        return (
-            <div className="checkBoxes">
-                <input name="CB1" type="checkbox" defaultChecked={checked1} onClick={e => updateCB(checked1, 1)} />
-                <input name="CB2" type="checkbox" defaultChecked={checked2} onClick={e => updateCB(checked2, 2)} />
-                <input name="CB3" type="checkbox" defaultChecked={checked3} onClick={e => updateCB(checked3, 3)} />
-                <input name="CB4" type="checkbox" defaultChecked={checked4} onClick={e => updateCB(checked4, 4)} />
-                <input name="CB5" type="checkbox" defaultChecked={checked5} onClick={e => updateCB(checked5, 5)} />
-                <input name="CB6" type="checkbox" defaultChecked={checked6} onClick={e => updateCB(checked6, 6)} />
-                <input name="CB7" type="checkbox" defaultChecked={checked7} onClick={e => updateCB(checked7, 7)} />
-                <input name="CB8" type="checkbox" defaultChecked={checked8} onClick={e => updateCB(checked8, 8)} />
-            </div>
-        );
+            return (
+                <div className="checkBoxes">
+                    <input name="CB1" type="checkbox" defaultChecked={checked1} onClick={e => updateCB(checked1, 1)} />
+                    <input name="CB2" type="checkbox" defaultChecked={checked2} onClick={e => updateCB(checked2, 2)} />
+                    <input name="CB3" type="checkbox" defaultChecked={checked3} onClick={e => updateCB(checked3, 3)} />
+                    <input name="CB4" type="checkbox" defaultChecked={checked4} onClick={e => updateCB(checked4, 4)} />
+                    <input name="CB5" type="checkbox" defaultChecked={checked5} onClick={e => updateCB(checked5, 5)} />
+                    <input name="CB6" type="checkbox" defaultChecked={checked6} onClick={e => updateCB(checked6, 6)} />
+                    <input name="CB7" type="checkbox" defaultChecked={checked7} onClick={e => updateCB(checked7, 7)} />
+                    <input name="CB8" type="checkbox" defaultChecked={checked8} onClick={e => updateCB(checked8, 8)} />
+                </div>
+            );
+        }
     }
 }
 
@@ -129,6 +130,9 @@ export const selectPokemon = function(){
     if(dex){
         let num1 = Math.floor(Math.random() * Math.floor(dex.length));
         let num2 = Math.floor(Math.random() * Math.floor(dex.length));
+        while(num1 === num2){
+            num2 = Math.floor(Math.random() * Math.floor(dex.length));
+        }
         return [dex[num1], dex[num2]];
     }
 
@@ -148,17 +152,23 @@ export const eliminatePokemon = function(poke){
 
     let dex     = JSON.parse(localStorage.getItem('dexToUse'));
     let gensDex = JSON.parse(localStorage.getItem('gensDex'));
+    let topTeam = JSON.parse(localStorage.getItem('topTeam'));
 
-    const index = dex.findIndex(pokemon => pokemon.id === poke.id); // update dexToUse
-    if (index > -1) { dex.splice(index, 1); }
+    if(!topTeam){
+        const index = dex.findIndex(pokemon => pokemon.id === poke.id); // update dexToUse
+        if (index > -1) { dex.splice(index, 1); }
 
-    for(let i = 0; i < gensDex.length; i++){ // update gensDex
-        const gensIndex = gensDex[i].findIndex(pokemon => pokemon.id === poke.id);
-        if (index > -1) { gensDex[i].splice(gensIndex, 1); }
+        for(let i = 0; i < gensDex.length; i++){ // update gensDex
+            const gensIndex = gensDex[i].findIndex(pokemon => pokemon.id === poke.id);
+            if (index > -1) { gensDex[i].splice(gensIndex, 1); }
+        }
+    } else {
+        alert('Your top team is ready! Click reset Pokedex and select a new gen to keep playing.');
     }
 
     localStorage.setItem('dexToUse', JSON.stringify(dex));
     localStorage.setItem('gensDex', JSON.stringify(gensDex));
+    console.log(dex.length);
 }
 
 export const renderPokemon = function(pokemonToDisplay, nationalDex){
@@ -196,6 +206,82 @@ export const renderPokemon = function(pokemonToDisplay, nationalDex){
 
 export const resetDexes = function(){
     localStorage.clear();
+    renderCB();
+}
+
+export const storeCompletion = function(){
+    let dex  = JSON.parse(localStorage.getItem('dexToUse'));
+    let gens = JSON.parse(localStorage.getItem('gens'));
+
+    if(dex){
+        if(dex.length === 50){
+            localStorage.setItem('top50', JSON.stringify(dex));
+        }
+        if(dex.length === 18){
+            alert('Your top 18 pokemon are available below!');
+            localStorage.setItem('top18', JSON.stringify(dex));
+        }
+        if(dex.length === 6){
+            alert('Your top team is available below! Continue playing to reset your pokedex.');
+            localStorage.setItem('topTeam', JSON.stringify(dex));
+        }
+        if(dex.length === 2){
+            resetDexes();
+        }
+    }
+}
+
+export const renderCompletion = function(){
+    let top50   = JSON.parse(localStorage.getItem('top50'));
+    let top18   = JSON.parse(localStorage.getItem('top18'));
+    let topTeam = JSON.parse(localStorage.getItem('topTeam'));
+
+    let itemsf;
+    let itemse;
+    let itemst;
+
+    if(top50 && !top18 && !topTeam){
+        itemsf = top50.map((mon) =>
+            <div className="smallMon">
+                <p className="sprited">{ mon.name }</p>
+                <img src={ mon.sprite } alt="small mon" />
+            </div>
+        );
+    }
+    if(top18){
+        itemse = top18.map((mon) =>
+            <div className="smallMon">
+                <p className="sprited">{ mon.name }</p>
+                <img src={ mon.sprite } alt="small mon" />
+            </div>
+        );
+    }
+    if(topTeam){
+        itemst = topTeam.map((mon) =>
+            <div className="smallMon">
+                <p className="sprited">{ mon.name }</p>
+                <img src={ mon.sprite } alt="small mon" />
+            </div>
+        );
+    }
+    const top18title   = <h3>Top 18: </h3>
+    const topTeamTitle = <h3>Top Team!</h3>
+
+    return(
+        <div>
+            <div className="top-50">
+                { top50 ? itemsf : null }
+            </div>
+            <div className="top-18">
+                { top18 ? top18title : null }
+                { top18 ? itemse : null }
+            </div>
+            <div className="topTeam">
+                { topTeam ? topTeamTitle : null }
+                { topTeam ? itemst : null }
+            </div>
+        </div>
+    );
 }
 
 
@@ -209,4 +295,6 @@ updateCB,
 aggregateDex, 
 selectPokemon, 
 renderPokemon,
-resetDexes };
+resetDexes,
+storeCompletion,
+renderCompletion };

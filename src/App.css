@@ -33,6 +33,11 @@
   width: 40vw;
 }
 
+.smallMon {
+  display: inline-block;
+  border: 1px solid grey;
+}
+
 .types {
   display:          inline;
   font-size:        14;

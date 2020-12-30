@@ -6,7 +6,9 @@ renderCB, updateCB,
 aggregateDex, 
 selectPokemon, 
 renderPokemon,
-resetDexes } from './functions' ;
+resetDexes,
+renderCompletion,
+storeCompletion } from './functions' ;
 import './App.css';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -16,15 +18,15 @@ function createPokemonObj(res){ // turn API response into usable object
     name:       null,
     type1:      null,
     type2:      null,
-    spriteURL:  null,
     artwork:    null,
-    id:         null
+    id:         null,
+    sprite:     null
   }
   pokemonObj.name      = res.name.charAt(0).toUpperCase() + res.name.slice(1);
   pokemonObj.type1     = res.types[0].type.name.charAt(0).toUpperCase() + res.types[0].type.name.slice(1);
-  pokemonObj.spriteURL = res.sprites.front_default;
   pokemonObj.artwork   = res.sprites.other["official-artwork"].front_default;
   pokemonObj.id        = res.id;
+  pokemonObj.sprite    = res.sprites.front_default;
   if(res.types[1]){
     pokemonObj.type2   = res.types[1].type.name.charAt(0).toUpperCase() + res.types[1].type.name.slice(1);
   }
@@ -68,7 +70,7 @@ class App extends Component {
     aggregateDex();
     let pokemonToDisplay = selectPokemon();
 
-    // checkForCompletion();
+    storeCompletion();
 
     return (
 
@@ -84,6 +86,8 @@ class App extends Component {
         {/*  div onClick={ e => eliminatePokemon(e) }  */}
         <button onClick={e => this.setState({ pokemonEliminated: true })}>Skip Round</button>
         <div onClick={e => this.setState({ pokemonEliminated: true })}><button onClick={e => resetDexes()}>Reset Pokedex</button></div>
+
+        { renderCompletion() }
       </div>
     );
     
