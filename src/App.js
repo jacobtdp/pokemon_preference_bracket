@@ -8,7 +8,8 @@ selectPokemon,
 renderPokemon,
 resetDexes,
 renderCompletion,
-storeCompletion } from './functions' ;
+storeCompletion,
+renderProgressBar } from './functions' ;
 import './App.css';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -75,16 +76,28 @@ class App extends Component {
     return (
 
       <div className="App">
-        <p>Pokemon: </p>
+
+        <header>
+          <h1>Pokemon!</h1>
+          <div className="directions">
+            <h3>I will help you choose your ideal Pokemon team!</h3>
+            <p>Use this tool to identify which Pokemon are your favorite.</p>
+            <p>Select a single generation, or any combination.</p>
+            <p>Click on the Pokemon that you prefer between the two Pokemon displayed.</p>
+            <p>If you absolutely love both of them, click the 'Skip Round' button!</p>
+          </div>
+        </header>
+
         <div>{ whileLoading(this.state.responsesArray) }</div>
         <div>{ renderCB(this.state.responsesArray) }</div>
+        <div>{ renderProgressBar() }</div>
         <div onClick={e => this.setState({ pokemonEliminated: true })}>
           { renderPokemon(pokemonToDisplay, this.state.responsesArray) }
         </div>
 
 
         {/*  div onClick={ e => eliminatePokemon(e) }  */}
-        <button onClick={e => this.setState({ pokemonEliminated: true })}>Skip Round</button>
+        <button onClick={e => this.setState({ pokemonEliminated: true })}>Skip Round (I love both)</button>
         <div onClick={e => this.setState({ pokemonEliminated: true })}><button onClick={e => resetDexes()}>Reset Pokedex</button></div>
 
         { renderCompletion() }

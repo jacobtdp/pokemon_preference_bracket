@@ -58,6 +58,23 @@
   border-radius: 3px;
 }
 
+.cb-label {
+  width: 4em;
+  display: inline-block;
+  border: 1px solid grey;
+}
+input {
+  width: 100%;
+}
+
+.progress{
+  width: 75%;
+  margin-left: 12.5%;
+}
+.progress > h4 {
+  text-align: left;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

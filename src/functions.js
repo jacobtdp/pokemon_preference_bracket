@@ -1,12 +1,31 @@
 import './App.css'
 
 export const whileLoading = function(array){
-    let bwidth = (array.length / 898) * 100;
+    let bwidth = Math.floor((array.length / 898) * 100);
         while(bwidth < 100){
         return(
             <div>
             <h3>Loading Pokemon... ({bwidth}%)</h3>
             <div className="loadingBar" style={{ width: `${bwidth}%` }}></div>
+            </div>
+        );
+    }
+}
+
+export const renderProgressBar = function(){
+    let cdex = JSON.parse(localStorage.getItem('dexToUseConst'));
+    let dex  = JSON.parse(localStorage.getItem('dexToUse'));
+
+    if(cdex && dex){
+        console.log(cdex.length, ' : ', dex.length);
+        let curr    = (cdex.length - dex.length);
+        let ideal   = cdex.length;
+        let percent = (curr / ideal) * 100;
+
+        return(
+            <div className="progress">
+            <h4>You're almost there! Progress... { Math.floor(percent) }%</h4>
+            <div className="loadingBar" style={{ width: `${percent}%` }}></div>
             </div>
         );
     }
@@ -61,14 +80,14 @@ export const renderCB = function(nationalDex){
 
             return (
                 <div className="checkBoxes">
-                    <input name="CB1" type="checkbox" defaultChecked={checked1} onClick={e => updateCB(checked1, 1)} />
-                    <input name="CB2" type="checkbox" defaultChecked={checked2} onClick={e => updateCB(checked2, 2)} />
-                    <input name="CB3" type="checkbox" defaultChecked={checked3} onClick={e => updateCB(checked3, 3)} />
-                    <input name="CB4" type="checkbox" defaultChecked={checked4} onClick={e => updateCB(checked4, 4)} />
-                    <input name="CB5" type="checkbox" defaultChecked={checked5} onClick={e => updateCB(checked5, 5)} />
-                    <input name="CB6" type="checkbox" defaultChecked={checked6} onClick={e => updateCB(checked6, 6)} />
-                    <input name="CB7" type="checkbox" defaultChecked={checked7} onClick={e => updateCB(checked7, 7)} />
-                    <input name="CB8" type="checkbox" defaultChecked={checked8} onClick={e => updateCB(checked8, 8)} />
+                    <label className="cb-label"><input name="CB1" type="checkbox" defaultChecked={checked1} onClick={e => updateCB(checked1, 1)} />Gen 1</label>
+                    <label className="cb-label"><input name="CB2" type="checkbox" defaultChecked={checked2} onClick={e => updateCB(checked2, 2)} />Gen 2</label>
+                    <label className="cb-label"><input name="CB3" type="checkbox" defaultChecked={checked3} onClick={e => updateCB(checked3, 3)} />Gen 3</label>
+                    <label className="cb-label"><input name="CB4" type="checkbox" defaultChecked={checked4} onClick={e => updateCB(checked4, 4)} />Gen 4</label>
+                    <label className="cb-label"><input name="CB5" type="checkbox" defaultChecked={checked5} onClick={e => updateCB(checked5, 5)} />Gen 5</label>
+                    <label className="cb-label"><input name="CB6" type="checkbox" defaultChecked={checked6} onClick={e => updateCB(checked6, 6)} />Gen 6</label>
+                    <label className="cb-label"><input name="CB7" type="checkbox" defaultChecked={checked7} onClick={e => updateCB(checked7, 7)} />Gen 7</label>
+                    <label className="cb-label"><input name="CB8" type="checkbox" defaultChecked={checked8} onClick={e => updateCB(checked8, 8)} />Gen 8</label>
                 </div>
             );
         }
@@ -104,6 +123,7 @@ export const aggregateDex = function(){
         }
 
         localStorage.setItem('dexToUse', JSON.stringify(dex));
+        localStorage.setItem('dexToUseConst', JSON.stringify(dex));
         return dex;
     }
 }
@@ -121,6 +141,7 @@ export const updateAggregateDex = function(){
     }
 
     localStorage.setItem('dexToUse', JSON.stringify(dex));
+    localStorage.setItem('dexToUseConst', JSON.stringify(dex));
     return dex;
 }
 
@@ -297,4 +318,5 @@ selectPokemon,
 renderPokemon,
 resetDexes,
 storeCompletion,
-renderCompletion };
+renderCompletion,
+renderProgressBar };
