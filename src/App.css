@@ -26,10 +26,16 @@
 
 .pokemon {
   width: 40vw;
+  display: inline-block;
 }
 
 .sprite {
   width: 40vw;
+}
+
+.smallMon {
+  display: inline-block;
+  border: 1px solid grey;
 }
 
 .types {
@@ -44,6 +50,29 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.loadingBar {
+  background-color: navy;
+  height: 5px;
+  border-radius: 3px;
+}
+
+.cb-label {
+  width: 4em;
+  display: inline-block;
+  border: 1px solid grey;
+}
+input {
+  width: 100%;
+}
+
+.progress{
+  width: 75%;
+  margin-left: 12.5%;
+}
+.progress > h4 {
+  text-align: left;
 }
 
 @keyframes App-logo-spin {
