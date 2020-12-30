@@ -60,8 +60,8 @@ class App extends Component {
     getGensFromStorage(this.state.responsesArray);
     aggregateDex();
     let pokemonToDisplay = selectPokemon();
-    console.log(pokemonToDisplay);
 
+    // checkForCompletion();
 
     return (
 
@@ -69,7 +69,9 @@ class App extends Component {
         <p>Pokemon: </p>
         <div>{ whileLoading(this.state.responsesArray) }</div>
         <div>{ renderCB(this.state.responsesArray) }</div>
-        <div>{ renderPokemon(pokemonToDisplay, this.state.responsesArray) }</div>
+        <div onClick={e => this.setState({ pokemonEliminated: true })}>
+          { renderPokemon(pokemonToDisplay, this.state.responsesArray) }
+        </div>
 
 
         {/*  div onClick={ e => eliminatePokemon(e) }  */}

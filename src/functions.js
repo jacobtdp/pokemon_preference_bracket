@@ -143,6 +143,24 @@ export const renderType2 = function(poke){
     }
 }
 
+export const eliminatePokemon = function(poke){
+    console.log('pokemon to eliminate: ', poke.name);
+
+    let dex     = JSON.parse(localStorage.getItem('dexToUse'));
+    let gensDex = JSON.parse(localStorage.getItem('gensDex'));
+
+    const index = dex.findIndex(pokemon => pokemon.id === poke.id); // update dexToUse
+    if (index > -1) { dex.splice(index, 1); }
+
+    for(let i = 0; i < gensDex.length; i++){ // update gensDex
+        const gensIndex = gensDex[i].findIndex(pokemon => pokemon.id === poke.id);
+        if (index > -1) { gensDex[i].splice(gensIndex, 1); }
+    }
+
+    localStorage.setItem('dexToUse', JSON.stringify(dex));
+    localStorage.setItem('gensDex', JSON.stringify(gensDex));
+}
+
 export const renderPokemon = function(pokemonToDisplay, nationalDex){
 
     if(nationalDex.length === 898){
@@ -152,7 +170,7 @@ export const renderPokemon = function(pokemonToDisplay, nationalDex){
 
             <div>
 
-                <div className="pokemon">
+                <div className="pokemon" onClick={ e => eliminatePokemon(poke2) }>
                     <div className="description">
                         <h3>{ poke1.name }</h3>
                         <p className="types">{ poke1.type1 }</p>
@@ -161,7 +179,7 @@ export const renderPokemon = function(pokemonToDisplay, nationalDex){
                     <img className="sprite" src={ poke1.artwork } alt="pokemon" />
                 </div>
 
-                <div className="pokemon">
+                <div className="pokemon" onClick={ e => eliminatePokemon(poke1) }>
                     <div className="description">
                         <h3>{ poke2.name }</h3>
                         <p className="types">{ poke2.type1 }</p>
