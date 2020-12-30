@@ -75,7 +75,6 @@ export const renderCB = function(nationalDex){
 }
 
 export const updateCB = function(checked, gen){
-    
     let gens = JSON.parse(localStorage.getItem('gens'));
     checked = gens.includes(gen);
 
@@ -87,11 +86,25 @@ export const updateCB = function(checked, gen){
     }
 
     localStorage.setItem('gens', JSON.stringify(gens));
-    console.log('gens is now: ', gens);
+}
+
+export const aggregateDex = function(){
+    let gens    = JSON.parse(localStorage.getItem('gens'));
+    let gensDex = JSON.parse(localStorage.getItem('gensDex'));
+    let dex = [];
+    gens = gens.sort((a, b) => (a > b) ? 1 : -1);
+
+    for(let i = 0; i < gens.length; i++){
+        for(let j = 0; j < gensDex[gens[i] - 1].length; j++){
+            dex.push(gensDex[gens[i] - 1][j]);
+        }
+    }
+
+    return dex;
 }
 
 
 
 
 
-export default { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB };
+export default { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB, aggregateDex };

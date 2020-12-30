@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB } from './functions' ;
+import { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB, aggregateDex } from './functions' ;
 import './App.css';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,7 +32,7 @@ class App extends Component {
   };
   
   componentDidMount() { // gets pokemon and adds them to state
-    if(localStorage.getItem('Pokedex') == null){ // if Pokemon have not been loaded locally
+    if(localStorage.getItem('nationalDex') == null){ // if Pokemon have not been loaded locally
       this.setState({ responsesArray: [] });
       for(let i = 1; i < 899; i++){ // load Pokemon to state from API
         this.callPokemon(i)
@@ -40,7 +40,7 @@ class App extends Component {
           .catch(err => console.log(err));
       }
     } else { // load Pokemon to state from local storage
-      this.setState({ responsesArray: JSON.parse(localStorage.getItem('Pokedex')) });
+      this.setState({ responsesArray: JSON.parse(localStorage.getItem('nationalDex')) });
     }
   }
 
@@ -58,7 +58,7 @@ class App extends Component {
   render(){
     organizeDexByGen(this.state.responsesArray);
     let gens = getGensFromStorage(this.state.responsesArray);
-    // let pokedexToDisplayFrom = aggregateDex(pokedex, gens);
+    let pokedexToDisplayFrom = aggregateDex(gens);
     // let pokemonToDisplay = selectPokemon(pokedexToDisplayFrom);
 
     return (
