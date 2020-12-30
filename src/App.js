@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB, aggregateDex, selectPokemon } from './functions' ;
+import { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB, aggregateDex, selectPokemon, renderPokemon } from './functions' ;
 import './App.css';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -19,7 +19,7 @@ function createPokemonObj(res){ // turn API response into usable object
   pokemonObj.artwork   = res.sprites.other["official-artwork"].front_default;
   pokemonObj.id        = res.id;
   if(res.types[1]){
-    pokemonObj.type2   = res.types[0].type.name.charAt(0).toUpperCase() + res.types[0].type.name.slice(1);
+    pokemonObj.type2   = res.types[1].type.name.charAt(0).toUpperCase() + res.types[1].type.name.slice(1);
   }
   return pokemonObj;
 }
@@ -58,12 +58,9 @@ class App extends Component {
   render(){
     organizeDexByGen(this.state.responsesArray);
     getGensFromStorage(this.state.responsesArray);
-
     aggregateDex();
-    
     let pokemonToDisplay = selectPokemon();
     console.log(pokemonToDisplay);
-
 
 
     return (
@@ -72,6 +69,7 @@ class App extends Component {
         <p>Pokemon: </p>
         <div>{ whileLoading(this.state.responsesArray) }</div>
         <div>{ renderCB(this.state.responsesArray) }</div>
+        <div>{ renderPokemon(pokemonToDisplay, this.state.responsesArray) }</div>
 
 
         {/*  div onClick={ e => eliminatePokemon(e) }  */}

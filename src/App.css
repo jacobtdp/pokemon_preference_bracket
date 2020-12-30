@@ -26,6 +26,7 @@
 
 .pokemon {
   width: 40vw;
+  display: inline-block;
 }
 
 .sprite {

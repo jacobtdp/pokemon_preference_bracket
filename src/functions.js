@@ -135,8 +135,48 @@ export const selectPokemon = function(){
     return 0;
 }
 
+export const renderType2 = function(poke){
+    if(poke.type2){
+        return(
+            <p className="types">{ poke.type2 }</p>
+        )
+    }
+}
+
+export const renderPokemon = function(pokemonToDisplay, nationalDex){
+
+    if(nationalDex.length === 898){
+        let poke1 = pokemonToDisplay[0];
+        let poke2 = pokemonToDisplay[1];
+        return(
+
+            <div>
+
+                <div className="pokemon">
+                    <div className="description">
+                        <h3>{ poke1.name }</h3>
+                        <p className="types">{ poke1.type1 }</p>
+                        { renderType2(poke1) }
+                    </div>
+                    <img className="sprite" src={ poke1.artwork } alt="pokemon" />
+                </div>
+
+                <div className="pokemon">
+                    <div className="description">
+                        <h3>{ poke2.name }</h3>
+                        <p className="types">{ poke2.type1 }</p>
+                        { renderType2(poke2) }
+                    </div>
+                    <img className="sprite" src={ poke2.artwork } alt="pokemon" />
+                </div>
+
+            </div>
+
+        );
+    }
+}
 
 
 
 
-export default { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB, aggregateDex, selectPokemon };
+export default { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB, aggregateDex, selectPokemon, renderPokemon };
