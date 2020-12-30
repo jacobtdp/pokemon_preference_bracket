@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import whileLoading from './functions' ;
 import './App.css';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ------------------------------------------------------------------------------------
-
 function createPokemonObj(res){ // turn API response into usable object
   let pokemonObj = {
     name:       null,
@@ -23,11 +23,8 @@ function createPokemonObj(res){ // turn API response into usable object
   }
   return pokemonObj;
 }
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ------------------------------------------------------------------------------------
-
-
 class App extends Component {
   state = {
     responsesArray:    [],
@@ -37,22 +34,15 @@ class App extends Component {
   componentDidMount() { // gets pokemon and adds them to state
     if(localStorage.getItem('Pokedex') == null){ // if Pokemon have not been loaded locally
       this.setState({ responsesArray: [] });
-
       for(let i = 1; i < 899; i++){ // load Pokemon to state from API
         console.log(i);
         this.callPokemon(i)
           .then(res => this.setState({ responsesArray: [...this.state.responsesArray, createPokemonObj(res)] }))
           .catch(err => console.log(err));
       }
-      // sort pokemon by ID
-      // let pokedex = this.state.responsesArray.sort((a, b) => (a.id > b.id) ? 1 : -1);
-      // this.setState({ responsesArray: pokedex });
-      console.log(this.state);
- 
     } else { // load Pokemon to state from local storage
       this.setState({ responsesArray: JSON.parse(localStorage.getItem('Pokedex')) });
     }
-
   }
 
   callPokemon = async (id) => {
@@ -65,11 +55,26 @@ class App extends Component {
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ------------------------------------------------------------------------------------
-render() {
+
+  render(){
+    // whileLoading(this.state.responsesArray);
+    // let pokedex = organizeDexByGen(this.state.responsesArray);
+    // let gens = getGensFromCB();
+    // let pokedexToDisplayFrom = aggregateDex(pokedex, gens);
+    // let pokemonToDisplay = selectPokemon(pokedexToDisplayFrom);
+
+
+    console.log(this.state.responsesArray);
 
     return (
+
       <div className="App">
         <p>Pokemon: </p>
+        <div>{ whileLoading(this.state.responsesArray) }</div>
+
+
+
+        {/*  div onClick={ e => eliminatePokemon(e) }  */}
         <button onClick={e => this.setState({ pokemonEliminated: true })}>Skip Round</button>
       </div>
     );
