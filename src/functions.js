@@ -99,10 +99,16 @@ export const updateCB = function(checked, gen){
     checked = gens.includes(gen);
 
     if(checked){
-        const index = gens.indexOf(gen);
-        if (index > -1) { gens.splice(index, 1); }
+        if(gens.length > 1){
+            const index = gens.indexOf(gen);
+            if (index > -1) { gens.splice(index, 1); }
+        } else {
+            alert('You must add another gen before removing this one!');
+        }
     } else {
-        gens.push(gen);
+        if(!gens.includes(gen)){
+            gens.push(gen);
+        }
     }
 
     localStorage.setItem('gens', JSON.stringify(gens));

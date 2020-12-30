@@ -89,7 +89,7 @@ class App extends Component {
         </header>
 
         <div>{ whileLoading(this.state.responsesArray) }</div>
-        <div>{ renderCB(this.state.responsesArray) }</div>
+        <div onClick={e => this.setState({ pokemonEliminated: true })}>{ renderCB(this.state.responsesArray) }</div>
         <div>{ renderProgressBar() }</div>
         <div onClick={e => this.setState({ pokemonEliminated: true })}>
           { renderPokemon(pokemonToDisplay, this.state.responsesArray) }
