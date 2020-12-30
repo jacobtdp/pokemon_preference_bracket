@@ -86,9 +86,28 @@ export const updateCB = function(checked, gen){
     }
 
     localStorage.setItem('gens', JSON.stringify(gens));
+    updateAggregateDex();
 }
 
 export const aggregateDex = function(){
+    let gens    = JSON.parse(localStorage.getItem('gens'));
+    let gensDex = JSON.parse(localStorage.getItem('gensDex'));
+    if(!localStorage.getItem('dexToUse') && gens && gensDex){
+        let dex = [];
+        gens = gens.sort((a, b) => (a > b) ? 1 : -1);
+
+        for(let i = 0; i < gens.length; i++){
+            for(let j = 0; j < gensDex[gens[i] - 1].length; j++){
+                dex.push(gensDex[gens[i] - 1][j]);
+            }
+        }
+
+        localStorage.setItem('dexToUse', JSON.stringify(dex));
+        return dex;
+    }
+}
+
+export const updateAggregateDex = function(){
     let gens    = JSON.parse(localStorage.getItem('gens'));
     let gensDex = JSON.parse(localStorage.getItem('gensDex'));
     let dex = [];
@@ -100,11 +119,24 @@ export const aggregateDex = function(){
         }
     }
 
+    localStorage.setItem('dexToUse', JSON.stringify(dex));
     return dex;
+}
+
+export const selectPokemon = function(){
+    let dex = JSON.parse(localStorage.getItem('dexToUse'));
+
+    if(dex){
+        let num1 = Math.floor(Math.random() * Math.floor(dex.length));
+        let num2 = Math.floor(Math.random() * Math.floor(dex.length));
+        return [dex[num1], dex[num2]];
+    }
+
+    return 0;
 }
 
 
 
 
 
-export default { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB, aggregateDex };
+export default { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB, aggregateDex, selectPokemon };

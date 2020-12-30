@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB, aggregateDex } from './functions' ;
+import { whileLoading, organizeDexByGen, getGensFromStorage, renderCB, updateCB, aggregateDex, selectPokemon } from './functions' ;
 import './App.css';
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,9 +57,14 @@ class App extends Component {
 
   render(){
     organizeDexByGen(this.state.responsesArray);
-    let gens = getGensFromStorage(this.state.responsesArray);
-    let pokedexToDisplayFrom = aggregateDex(gens);
-    // let pokemonToDisplay = selectPokemon(pokedexToDisplayFrom);
+    getGensFromStorage(this.state.responsesArray);
+
+    aggregateDex();
+    
+    let pokemonToDisplay = selectPokemon();
+    console.log(pokemonToDisplay);
+
+
 
     return (
 
